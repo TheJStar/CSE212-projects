@@ -15,6 +15,24 @@ public class CustomerService {
         // Expected Result: 
         Console.WriteLine("Test 1");
 
+        // var cs = new CustomerService(0);
+
+        // for (int i = 0; i < 5; i++) {
+        //     cs.AddNewCustomer();
+        // }
+        // Console.WriteLine(cs.ToString());
+        // for (int i = 0; i < 5; i++) {
+        //     cs.AddNewCustomer();
+        // }
+        // Console.WriteLine(cs.ToString());
+        // for (int i = 0; i < 5; i++) {
+        //     cs.ServeCustomer();
+        // }
+        // Console.WriteLine(cs.ToString());
+        // for (int i = 0; i < 5; i++) {
+        //     cs.ServeCustomer();
+        // }
+        // Console.WriteLine(cs.ToString());
         // Defect(s) Found: 
 
         Console.WriteLine("=================");
@@ -23,6 +41,17 @@ public class CustomerService {
         // Scenario: 
         // Expected Result: 
         Console.WriteLine("Test 2");
+
+        var cs1 = new CustomerService(2);
+
+        for (int i = 0; i < 4; i++) {
+            cs1.AddNewCustomer();
+        }
+        Console.WriteLine(cs1.ToString());
+        for (int i = 0; i < 5; i++) {
+            cs1.ServeCustomer();
+        }
+        Console.WriteLine(cs1.ToString());
 
         // Defect(s) Found: 
 
@@ -67,7 +96,7 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
+        if (_queue.Count >= _maxSize) {
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
         }
@@ -88,9 +117,15 @@ public class CustomerService {
     /// Dequeue the next customer and display the information.
     /// </summary>
     private void ServeCustomer() {
-        _queue.RemoveAt(0);
+        // Verify there is room in the service queue
+        if (_queue.Count <= 0) {
+            Console.WriteLine("The Queue is empty.");
+            return;
+        }
+
         var customer = _queue[0];
         Console.WriteLine(customer);
+        _queue.RemoveAt(0);
     }
 
     /// <summary>
