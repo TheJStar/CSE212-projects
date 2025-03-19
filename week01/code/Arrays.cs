@@ -13,7 +13,20 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
-        return []; // replace this return statement with your own
+        // Solution by : Joel
+        // 1) make an array that will be as the length parameter (so it will be specified by the user)
+        // 2) make a loop that will run length (the parameter) times and for each i value do number * (i + 1) 
+        // and add it to the next slot in the array
+        // 3) return the array
+
+        // step 1
+        double[] results = new double[length];
+        // step 2
+        for (int i = 0; i < length; i++) {
+            results[i] = number * ( i + 1 );
+        }
+        // step 3
+        return results;
     }
 
     /// <summary>
@@ -29,5 +42,16 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        // Solution by: Joel
+        // 1) start a for loop (run the loop as amount (the parameter) times long)
+        // 2) get the last element (through index count-1) and move (insert at the start & remove from end) it to the start
+
+        // step 1
+        for (int i = 0; i < amount; i++) {
+            // step 2
+            data.Insert(0, data[data.Count - 1]);
+            data.RemoveAt(data.Count - 1);
+        }
     }
 }
