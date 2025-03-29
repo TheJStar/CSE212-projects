@@ -134,12 +134,6 @@ public class LinkedList : IEnumerable<int>
             _tail = null;
             return;
         }
-        if (_head == null && _tail != null && _tail.Data == value) {
-            RemoveTail();
-        }
-        if (_head != null && _head.Data == value && _tail == null) {
-            RemoveHead();
-        }
 
         Node current = _head;
 
