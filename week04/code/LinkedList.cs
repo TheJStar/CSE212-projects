@@ -132,8 +132,6 @@ public class LinkedList : IEnumerable<int>
 
         while (current != null) {
             if (current.Data == value) {
-                Console.WriteLine(ToString());
-                Console.WriteLine(current.Data);
                 if(current.Prev != null) current.Prev.Next = current.Next; else RemoveHead();
                 if(current.Next != null) current.Next.Prev = current.Prev; else RemoveTail();
                 return;
