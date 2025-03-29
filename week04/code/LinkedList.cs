@@ -128,13 +128,6 @@ public class LinkedList : IEnumerable<int>
     public void Remove(int value)
     {
         // TODO Problem 3
-        if (_head == _tail)
-        {
-            _head = null;
-            _tail = null;
-            return;
-        }
-
         Node current = _head;
 
         while (current != null) {
