@@ -148,10 +148,8 @@ public class RemoveTests
         Assert.AreEqual("<LinkedList>{5, 4, 35, 2, 2}", ll.ToString());
         ll.Remove(2);
         Assert.AreEqual("<LinkedList>{5, 4, 35, 2}", ll.ToString());
-        // ll.Remove(2);
-        // Assert.AreEqual("<LinkedList>{5, 4, 35}", ll.ToString());
-        ll.Remove(5);
-        Assert.AreEqual("<LinkedList>{4, 35, 2}", ll.ToString());
+        ll.Remove(2);
+        Assert.AreEqual("<LinkedList>{5, 4, 35}", ll.ToString());
     }
 }
 
