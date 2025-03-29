@@ -22,7 +22,23 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        HashSet<string> wordsSet = new HashSet<string>();
+        List<string> pairs = new List<string>();
+
+        foreach (string word in words) {
+            char[] charlist = word.ToCharArray();
+            Array.Reverse(charlist);
+            string revWord = new string(charlist);
+
+            if (wordsSet.Contains(revWord)) {
+                pairs.Add(word + " & "+ revWord);
+                Console.WriteLine(word + " & " + revWord);
+            } else {
+                wordsSet.Add(word);
+            }
+        }
+        
+        return pairs.ToArray();
     }
 
     /// <summary>
@@ -43,8 +59,13 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            if (degrees.ContainsKey(fields[3])) {
+                degrees[fields[3]]++;
+            } else {
+                degrees[fields[3]] = 1;
+            }
         }
-
+        
         return degrees;
     }
 
@@ -67,6 +88,38 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
+        Dictionary<char, int> letterCounter1 = new Dictionary<char, int>();
+        Dictionary<char, int> letterCounter2 = new Dictionary<char, int>();
+        
+        string newWord1 = word1.Replace(" ", "").ToLower();
+        string newWord2 = word2.Replace(" ", "").ToLower();
+        if (newWord1.Length == newWord2.Length) {
+            foreach (char letter in newWord1) {
+                if (letterCounter1.ContainsKey(letter)) {
+                    letterCounter1[letter]++;
+                } else {
+                    letterCounter1[letter] = 1;
+                }
+            }
+            foreach (char letter in newWord2) {
+                if (letterCounter2.ContainsKey(letter)) {
+                    letterCounter2[letter]++;
+                } else {
+                    letterCounter2[letter] = 1;
+                }
+            }
+            foreach (char letterkey in letterCounter1.Keys) {
+                if (!letterCounter2.ContainsKey(letterkey)) {
+                    return false;
+                } else {
+                    if (letterCounter1[letterkey] != letterCounter2[letterkey]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        
         return false;
     }
 
@@ -100,7 +153,12 @@ public static class SetsAndMaps
         // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
+        List<string> earthquakes =  new List<string>();
+        foreach (FeatureCollection.Features features in featureCollection.features) {
+            string earthquakeInfo = features.properties.place + " - Mag " + features.properties.mag;
+            earthquakes.Add(earthquakeInfo);
+        }
         // 3. Return an array of these string descriptions.
-        return [];
+        return earthquakes.ToArray();
     }
 }
