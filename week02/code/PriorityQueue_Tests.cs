@@ -15,9 +15,10 @@ public class PriorityQueueTests
         priorityQueue.Enqueue("Bob", 2);
         priorityQueue.Enqueue("Tim", 5);
         priorityQueue.Enqueue("Sue", 3);
+        priorityQueue.Enqueue("John", 6);
 
         var prioritizedValue = priorityQueue.Dequeue();
-        Assert.AreEqual("Tim", prioritizedValue);
+        Assert.AreEqual("John", prioritizedValue);
     }
 
     [TestMethod]
@@ -27,12 +28,15 @@ public class PriorityQueueTests
     public void TestPriorityQueue_MoreThanOneHighest()
     {
         var priorityQueue = new PriorityQueue();
-        priorityQueue.Enqueue("Bob", 2);
+        priorityQueue.Enqueue("Bob", 5);
         priorityQueue.Enqueue("Tim", 5);
         priorityQueue.Enqueue("Sue", 3);
         priorityQueue.Enqueue("George", 5);
 
         var prioritizedValue = priorityQueue.Dequeue();
+        Assert.AreEqual("George", prioritizedValue);
+
+        prioritizedValue = priorityQueue.Dequeue();
         Assert.AreEqual("Tim", prioritizedValue);
     }
 
