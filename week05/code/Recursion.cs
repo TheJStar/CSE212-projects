@@ -193,10 +193,10 @@ public static class Recursion
         if (maze.IsValidMove(currPath, x, y)) {
             currPath.Add((x, y));
             Debug.WriteLine(branchName+" = "+currPath.AsString());
-            if (maze.IsEnd(x, y)) {
-                Debug.WriteLine(branchName+" = "+currPath.AsString()+"::Finished");
-                return;
-            }
+            // if (maze.IsEnd(x, y)) {
+            //     Debug.WriteLine(branchName+" = "+currPath.AsString()+"::Finished");
+            //     return;
+            // }
         } else {
             // Debug.WriteLine(branchName+" = "+"Failed");
             return;
