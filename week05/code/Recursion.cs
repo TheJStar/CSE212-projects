@@ -171,44 +171,45 @@ public static class Recursion
 
         // TODO Start Problem 5
         // ADD CODE HERE
-        Trace.WriteLine("*");
-        if (maze.IsEnd(x, y)) {
-            currPath.Add((x, y));
-            Debug.WriteLine(currPath.AsString());
-            if (!results.Contains(currPath.AsString())) results.Add(currPath.AsString());
-            return;
-            //SolveMaze(results, maze, branchName);
-        } else {
-            if (maze.IsValidMove(currPath, x, y)) {
-                SolveMaze(results, maze, branchName+">",x+1, y, currPath);
-                SolveMaze(results, maze, branchName+"<",x-1, y, currPath);
-                SolveMaze(results, maze, branchName+"v",x, y+1, currPath);
-                SolveMaze(results, maze, branchName+"^",x, y-1, currPath);
-            } else {
-                return;
-            }
-        }
 
-        // if (maze.IsValidMove(currPath, x, y)) {
+        // Trace.WriteLine("*");
+        // if (maze.IsEnd(x, y)) {
         //     currPath.Add((x, y));
-        //     Debug.WriteLine(branchName+" = "+currPath.AsString());
-        //     if (maze.IsEnd(x, y)) {
-        //         Debug.WriteLine(branchName+" = "+currPath.AsString()+"::Finished");
+        //     Debug.WriteLine(currPath.AsString());
+        //     if (!results.Contains(currPath.AsString())) results.Add(currPath.AsString());
+        //     return;
+        //     //SolveMaze(results, maze, branchName);
+        // } else {
+        //     if (maze.IsValidMove(currPath, x, y)) {
+        //         SolveMaze(results, maze, branchName+">",x+1, y, currPath);
+        //         SolveMaze(results, maze, branchName+"<",x-1, y, currPath);
+        //         SolveMaze(results, maze, branchName+"v",x, y+1, currPath);
+        //         SolveMaze(results, maze, branchName+"^",x, y-1, currPath);
+        //     } else {
         //         return;
         //     }
-        // } else {
-        //     Debug.WriteLine(branchName+" = "+"Failed");
-        //     return;
         // }
-        // if (!maze.IsEnd(x, y)) {
-        //     SolveMaze(results, maze, branchName+">",x+1, y, currPath);
-        //     SolveMaze(results, maze, branchName+"<",x-1, y, currPath);
-        //     SolveMaze(results, maze, branchName+"v",x, y+1, currPath);
-        //     SolveMaze(results, maze, branchName+"^",x, y-1, currPath);
-        // } else if (!results.Contains(currPath.AsString()) && maze.IsEnd(x, y)) {
-        //     results.Add(currPath.AsString());
-        //     SolveMaze(results, maze, branchName+" -new: ");
-        // }
+
+        if (maze.IsValidMove(currPath, x, y)) {
+            currPath.Add((x, y));
+            Debug.WriteLine(branchName+" = "+currPath.AsString());
+            if (maze.IsEnd(x, y)) {
+                Debug.WriteLine(branchName+" = "+currPath.AsString()+"::Finished");
+                return;
+            }
+        } else {
+            // Debug.WriteLine(branchName+" = "+"Failed");
+            return;
+        }
+        if (!maze.IsEnd(x, y)) {
+            SolveMaze(results, maze, branchName+">",x+1, y, currPath);
+            SolveMaze(results, maze, branchName+"<",x-1, y, currPath);
+            SolveMaze(results, maze, branchName+"v",x, y+1, currPath);
+            SolveMaze(results, maze, branchName+"^",x, y-1, currPath);
+        } else if (!results.Contains(currPath.AsString()) && maze.IsEnd(x, y)) {
+            results.Add(currPath.AsString());
+            SolveMaze(results, maze, branchName+" -new: ");
+        }
 
         // foreach (string path in results) {
         //     Debug.WriteLine(results.Count+"-"+path);
