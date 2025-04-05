@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 public static class Recursion
 {
@@ -15,7 +17,14 @@ public static class Recursion
     public static int SumSquaresRecursive(int n)
     {
         // TODO Start Problem 1
-        return 0;
+        if (n <= 0) {
+            return 0;
+        }
+        // n = 0 =0
+        // n * n + (n -1) ^ 2
+        var res = (n*n) + SumSquaresRecursive(n-1);
+        Console.WriteLine(res);
+        return res;
     }
 
     /// <summary>
@@ -40,6 +49,14 @@ public static class Recursion
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
         // TODO Start Problem 2
+        if (word.Length == size) {
+            results.Add(word);
+        } else {
+            foreach (char letter in letters) {
+                string newLetters = letters.Split(letter)[0] + letters.Split(letter)[1];
+                PermutationsChoose(results, newLetters, size, word+letter);
+            }
+        }
     }
 
     /// <summary>
@@ -86,6 +103,9 @@ public static class Recursion
     /// </summary>
     public static decimal CountWaysToClimb(int s, Dictionary<int, decimal>? remember = null)
     {
+        if (remember == null) {
+            remember = new Dictionary<int,decimal>();
+        }
         // Base Cases
         if (s == 0)
             return 0;
@@ -97,9 +117,12 @@ public static class Recursion
             return 4;
 
         // TODO Start Problem 3
-
+        if (remember.ContainsKey(s)) {
+            return remember[s];
+        }
         // Solve using recursion
         decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        remember[s] = ways;
         return ways;
     }
 
@@ -119,25 +142,79 @@ public static class Recursion
     public static void WildcardBinary(string pattern, List<string> results)
     {
         // TODO Start Problem 4
+        if ((pattern.Length == 0 || !pattern.Contains("*")) && !results.Contains(pattern)) {
+            results.Add(pattern);
+        }
+        foreach (char letter in pattern.ToCharArray()) {
+            if (letter == '*') {
+                string newPattern  = pattern.Split(letter, 2)[0] + "0" + pattern.Split(letter, 2)[1];
+                string newPattern2  = pattern.Split(letter, 2)[0] + "1" + pattern.Split(letter, 2)[1];
+                WildcardBinary(newPattern, results);
+                WildcardBinary(newPattern2, results);
+            }
+        }
     }
 
     /// <summary>
     /// Use recursion to insert all paths that start at (0,0) and end at the
     /// 'end' square into the results list.
     /// </summary>
-    public static void SolveMaze(List<string> results, Maze maze, int x = 0, int y = 0, List<ValueTuple<int, int>>? currPath = null)
+    public static void SolveMaze(List<string> results, Maze maze, string branchName = "path:", int x = 0, int y = 0, List<ValueTuple<int, int>>? currPath = null)
     {
+        // attempts 120
         // If this is the first time running the function, then we need
         // to initialize the currPath list.
         if (currPath == null) {
             currPath = new List<ValueTuple<int, int>>();
         }
-        
         // currPath.Add((1,2)); // Use this syntax to add to the current path
 
         // TODO Start Problem 5
         // ADD CODE HERE
+        Trace.WriteLine("*");
+        if (maze.IsEnd(x, y)) {
+            currPath.Add((x, y));
+            Debug.WriteLine(currPath.AsString());
+            if (!results.Contains(currPath.AsString())) results.Add(currPath.AsString());
+            return;
+            //SolveMaze(results, maze, branchName);
+        } else {
+            if (maze.IsValidMove(currPath, x, y)) {
+                SolveMaze(results, maze, branchName+">",x+1, y, currPath);
+                SolveMaze(results, maze, branchName+"<",x-1, y, currPath);
+                SolveMaze(results, maze, branchName+"v",x, y+1, currPath);
+                SolveMaze(results, maze, branchName+"^",x, y-1, currPath);
+            } else {
+                return;
+            }
+        }
 
+        // if (maze.IsValidMove(currPath, x, y)) {
+        //     currPath.Add((x, y));
+        //     Debug.WriteLine(branchName+" = "+currPath.AsString());
+        //     if (maze.IsEnd(x, y)) {
+        //         Debug.WriteLine(branchName+" = "+currPath.AsString()+"::Finished");
+        //         return;
+        //     }
+        // } else {
+        //     Debug.WriteLine(branchName+" = "+"Failed");
+        //     return;
+        // }
+        // if (!maze.IsEnd(x, y)) {
+        //     SolveMaze(results, maze, branchName+">",x+1, y, currPath);
+        //     SolveMaze(results, maze, branchName+"<",x-1, y, currPath);
+        //     SolveMaze(results, maze, branchName+"v",x, y+1, currPath);
+        //     SolveMaze(results, maze, branchName+"^",x, y-1, currPath);
+        // } else if (!results.Contains(currPath.AsString()) && maze.IsEnd(x, y)) {
+        //     results.Add(currPath.AsString());
+        //     SolveMaze(results, maze, branchName+" -new: ");
+        // }
+
+        // foreach (string path in results) {
+        //     Debug.WriteLine(results.Count+"-"+path);
+        // }
+
+        return;
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
 }
