@@ -159,9 +159,11 @@ public static class Recursion
     /// Use recursion to insert all paths that start at (0,0) and end at the
     /// 'end' square into the results list.
     /// </summary>
-    public static void SolveMaze(List<string> results, Maze maze, string branchName = "path:", List<ValueTuple<int, int>>? deadends = null, int x = 0, int y = 0, List<ValueTuple<int, int>>? currPath = null)
+    public static void SolveMaze(List<string> results, Maze maze, List<ValueTuple<int, int>>? deadends = null, int x = 0, int y = 0, List<ValueTuple<int, int>>? currPath = null)
     {
-        // attempts 120
+        // if you want to keep track of paths
+        // string branchName = "path:",
+
         // If this is the first time running the function, then we need
         // to initialize the currPath list.
         if (currPath == null) {
@@ -177,85 +179,63 @@ public static class Recursion
         if (!currPath.Contains((x, y))) {
             currPath.Add((x, y));
         }
+        // Base cases
+        // 1) if not the end go through other paths
         if (!maze.IsEnd(x, y)) {
-            Debug.WriteLine(branchName + " : " + currPath.AsString());
+            Debug.WriteLine(" : " + currPath.AsString());
             
-            if (!deadends.Contains((x, y))) {
-                if (maze.IsValidMove(currPath, x-1, y) && !deadends.Contains((x-1, y))) {
-                    SolveMaze(results, maze, branchName+"<", deadends, x-1, y, currPath);
-                    // Debug.WriteLine("moved left");
+            if (maze.IsValidMove(currPath, x-1, y) && !deadends.Contains((x-1, y))) {
+                SolveMaze(results, maze, deadends, x-1, y, currPath); // branchName+"<",
+                // Debug.WriteLine("moved left");
+            }
+            else if (maze.IsValidMove(currPath, x, y+1) && !deadends.Contains((x, y+1))) {
+                SolveMaze(results, maze, deadends, x, y+1, currPath); // branchName+"v",
+                // Debug.WriteLine("moved down");
+            }
+            else if (maze.IsValidMove(currPath, x+1, y) && !deadends.Contains((x+1, y))) {
+                SolveMaze(results, maze, deadends, x+1, y, currPath); //branchName+">",
+                // Debug.WriteLine("moved right");
+            }
+            else if (maze.IsValidMove(currPath, x, y-1) && !deadends.Contains((x, y-1))) {
+                SolveMaze(results, maze, deadends, x, y-1, currPath); // branchName+"^",
+                // Debug.WriteLine("moved up");
+            }
+            else {
+                Debug.WriteLine(" : " + currPath.AsString() + " : Deadend");
+                Debug.WriteLine("Dead coords : "+deadends.AsString());
+                if (currPath.Count == 1) {
+                    // base case
+                    // 4) if there are no other squares to move to that is not a dead end or a wall at the start finish
+                    return;
                 }
-                else if (maze.IsValidMove(currPath, x, y+1) && !deadends.Contains((x, y+1))) {
-                    SolveMaze(results, maze, branchName+"v",deadends, x, y+1, currPath);
-                    // Debug.WriteLine("moved down");
-                }
-                else if (maze.IsValidMove(currPath, x+1, y)&& !deadends.Contains((x+1, y))) {
-                    SolveMaze(results, maze, branchName+">",deadends, x+1, y, currPath);
-                    // Debug.WriteLine("moved right");
-                }
-                else if (maze.IsValidMove(currPath, x, y-1) && !deadends.Contains((x, y-1))) {
-                    SolveMaze(results, maze, branchName+"^",deadends, x, y-1, currPath);
-                    // Debug.WriteLine("moved up");
-                } else {
-                    Debug.WriteLine(branchName + " : " + currPath.AsString() + " : Deadend");
-                    deadends.Add((x, y));
-                    currPath.Remove((x, y));
-                    SolveMaze(results, maze, branchName+"^",deadends, currPath[currPath.Count-1].Item1, currPath[currPath.Count-1].Item2, currPath);
-                }
+                deadends.Add((x, y));
+                currPath.Remove((x, y));
+                SolveMaze(results, maze, deadends, currPath[currPath.Count-1].Item1, currPath[currPath.Count-1].Item2, currPath); // [was throwing error if the currpath was empty]=>branchName.Substring(0, branchName.Length-2),
             }
             
-        } else if (!results.Contains(currPath.AsString()) && maze.IsEnd(x, y)) {
-            Debug.WriteLine(branchName + " : " + currPath.AsString() + " : Finished");
+        }
+        // 2) if the end and not a recorded path add it and start over
+        else if (!results.Contains(currPath.AsString()) && maze.IsEnd(x, y)) {
+            Debug.WriteLine(" : " + currPath.AsString() + " : Finished");
             results.Add(currPath.AsString());
-            // add all the coords from currPath to deadends
-            SolveMaze(results, maze, branchName+" -new: ");
-        } else {
-            currPath.Clear();
+            Debug.WriteLine("Dead coords :+: "+deadends.AsString());
+            SolveMaze(results, maze); // branchName+" -new: "
+        }
+        // 3) if ended and it's a recorded path add to deadends to not return again through the same path
+        else {
+            currPath.Remove((x, y));
+            deadends.Add((currPath[currPath.Count-1].Item1, currPath[currPath.Count-1].Item2));
+            Debug.WriteLine(" ::: " + currPath.AsString() + " : Finished Before");
+            Debug.WriteLine("Dead coords :-: "+deadends.AsString());
+            currPath.Remove((currPath[currPath.Count-1].Item1, currPath[currPath.Count-1].Item2));
+            SolveMaze(results, maze, deadends, currPath[currPath.Count-1].Item1, currPath[currPath.Count-1].Item2, currPath); // branchName+"^",
             return;
         }
 
-        // Trace.WriteLine("*");
-        // if (maze.IsEnd(x, y)) {
-        //     currPath.Add((x, y));
-        //     Debug.WriteLine(currPath.AsString());
-        //     if (!results.Contains(currPath.AsString())) results.Add(currPath.AsString());
-        //     return;
-        //     //SolveMaze(results, maze, branchName);
-        // } else {
-        //     if (maze.IsValidMove(currPath, x, y)) {
-        //         SolveMaze(results, maze, branchName+">",x+1, y, currPath);
-        //         SolveMaze(results, maze, branchName+"<",x-1, y, currPath);
-        //         SolveMaze(results, maze, branchName+"v",x, y+1, currPath);
-        //         SolveMaze(results, maze, branchName+"^",x, y-1, currPath);
-        //     } else {
-        //         return;
-        //     }
+        // print out the results
+        // foreach (string path in results) {
+        //     Debug.WriteLine(results.Count+"-"+path);
         // }
-
-        // if (maze.IsValidMove(currPath, x, y)) {
-        //     currPath.Add((x, y));
-        //     Debug.WriteLine(branchName+" = "+currPath.AsString());
-        //     // if (maze.IsEnd(x, y)) {
-        //     //     Debug.WriteLine(branchName+" = "+currPath.AsString()+"::Finished");
-        //     //     return;
-        //     // }
-        // } else {
-        //     // Debug.WriteLine(branchName+" = "+"Failed");
-        //     return;
-        // }
-        // if (!maze.IsEnd(x, y)) {
-        //     SolveMaze(results, maze, branchName+">",x+1, y, currPath);
-        //     SolveMaze(results, maze, branchName+"<",x-1, y, currPath);
-        //     SolveMaze(results, maze, branchName+"v",x, y+1, currPath);
-        //     SolveMaze(results, maze, branchName+"^",x, y-1, currPath);
-        // } else if (!results.Contains(currPath.AsString()) && maze.IsEnd(x, y)) {
-        //     results.Add(currPath.AsString());
-        //     SolveMaze(results, maze, branchName+" -new: ");
-        // }
-
-        foreach (string path in results) {
-            Debug.WriteLine(results.Count+"-"+path);
-        }
 
         return;
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
