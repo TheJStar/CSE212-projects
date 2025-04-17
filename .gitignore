@@ -366,3 +366,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# the cheatsheet
+cse212_cheat_sheet.docx
